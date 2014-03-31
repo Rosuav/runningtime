@@ -40,24 +40,29 @@ LEEWAY = 1.0 # Aim to be this many m/s below the speed limit when we hit a curve
 
 # Input
 # TODO: Check sys.argv for a script file, or maybe multiple of them, and parse those first/instead
-tracksections=[]
+tracksections = []
 while True:
-	n=input("Enter track length in m: ")
+	n = input("Enter track length in m: ")
 	if not n: break
-	d=input("Enter speed limit [400km/h]: ") or 400
+	d = input("Enter speed limit [400km/h]: ") or 400
 	tracksections.append((int(n),int(d)/3.6))
 if not tracksections: sys.exit(0)
+
+# As the King of Hearts instructed, we begin at the beginning of the track, go
+# on till we come to the end, then stop. To facilitate that last part, we add
+# a zero-length track section with a speed limit of zero; we should get to that
+# at the very end of the previous section.
 tracksections.append((0,0))
 
 # Simulator initialization
-t=0.0
-section=iter(tracksections)
+t = 0.0
+section = iter(tracksections)
 prevspeed = LINESPEED # Assume track speed behind us (at start of simulation) is maximum.
 cursection, curspeed = next(section)
 nextsection, nextspeed = next(section)
-posn=0
-mode="Idle"
-speed=0.0
+posn = 0
+mode = "Idle"
+speed = 0.0
 
 # And we simulate!
 while True:
@@ -110,4 +115,4 @@ while True:
 	# enough track left in this section, advance time by just enough to get there.
 	# Otherwise, advance time 1 second and iterate.
 
-print("Final time:",t,"seconds - %d:%02d"%divmod(int(t),60))
+print("Final time:", t, "seconds - %d:%02d" % divmod(int(t), 60))
