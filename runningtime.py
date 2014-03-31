@@ -30,6 +30,12 @@ Corollaries:
   the one next track section.
 
 """
+# Constants
+linespeed = 400/3.6 # Maximum speed on straight track (used as "infinity"). Weird stuff may happen if curve speed exceeds this, don't do it.
+trainlength=264
+leeway = 1.0 # Aim to be this many m/s below the speed limit when we hit a curve
+
+# Input
 tracksections=[]
 while True:
 	n=int(input("Enter track length in m: ") or 0)
@@ -38,20 +44,19 @@ while True:
 	if not d: d=400
 	d=d/3.6
 	tracksections.append((n,d))
-
 tracksections.append((0,0))
+
+# Simulator initialization
 t=0.0
 section=iter(tracksections)
-linespeed = 400/3.6 # Maximum speed on straight track (used as "infinity"). Weird stuff may happen if curve speed exceeds this, don't do it.
 prevspeed = linespeed # Assume track speed behind us (at start of simulation) is maximum.
 cursection, curspeed = next(section)
 nextsection, nextspeed = next(section)
 posn=0
-trainlength=264
 mode="Idle"
 speed=0.0
-leeway = 1.0 # Aim to be this many m/s below the speed limit when we hit a curve
 
+# And we simulate!
 while True:
 	"""
 	This is like Lunar Lander: first we decide what we're going to do this second,
