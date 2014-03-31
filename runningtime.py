@@ -106,3 +106,5 @@ while True:
 	# TODO: Figure out how much we change speed by (linac), and if we don't have
 	# enough track left in this section, advance time by just enough to get there.
 	# Otherwise, advance time 1 second and iterate.
+
+print("Final time:",t,"seconds - %d:%02d"%divmod(int(t),60))
