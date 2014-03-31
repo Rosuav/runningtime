@@ -34,9 +34,9 @@ Corollaries:
 import sys
 
 # Constants
-linespeed = 400/3.6 # Maximum speed on straight track (used as "infinity"). Weird stuff may happen if curve speed exceeds this, don't do it.
-trainlength=264
-leeway = 1.0 # Aim to be this many m/s below the speed limit when we hit a curve
+LINESPEED = 400/3.6 # Maximum speed on straight track (used as "infinity"). Weird stuff may happen if curve speed exceeds this, don't do it.
+TRAINLENGTH = 264
+LEEWAY = 1.0 # Aim to be this many m/s below the speed limit when we hit a curve
 
 # Input
 # TODO: Check sys.argv for a script file, or maybe multiple of them, and parse those first/instead
@@ -52,7 +52,7 @@ tracksections.append((0,0))
 # Simulator initialization
 t=0.0
 section=iter(tracksections)
-prevspeed = linespeed # Assume track speed behind us (at start of simulation) is maximum.
+prevspeed = LINESPEED # Assume track speed behind us (at start of simulation) is maximum.
 cursection, curspeed = next(section)
 nextsection, nextspeed = next(section)
 posn=0
@@ -80,7 +80,7 @@ while True:
 	or braking just before the end of a section may mistakenly think that the
 	effect happens more quickly.
 	"""
-	maxspeed = min(curspeed, prevspeed if posn<trainlength else linespeed)
+	maxspeed = min(curspeed, prevspeed if posn<TRAINLENGTH else LINESPEED)
 	if curspeed > maxspeed: raise DerailmentError # Stub, will actually raise NameError :)
 	"""
 	Calculate the speed we would be at when we hit the next section, if we hit
@@ -99,7 +99,7 @@ while True:
 	# TODO: Solve for t. This will involve a quadratic that might have no solution.
 	# If it has no solution, speed_at_next_section is 0.0 (ie you would come to a complete stop).
 	speed_at_next_section = curspeed - 0.85*t
-	if speed_at_next_section >= nextspeed-leeway:
+	if speed_at_next_section >= nextspeed-LEEWAY:
 		# Note that if it's actually greater, we'll probably derail when we hit it
 		brake
 	elif curspeed < maxspeed:
