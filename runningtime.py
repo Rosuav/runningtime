@@ -67,31 +67,27 @@ speed = 0.0
 
 # And we simulate!
 while True:
-	"""
-	This is like Lunar Lander: first we decide what we're going to do this second,
-	then we do it. If the current section doesn't have enough meters in it, we'll
-	solve Achilles and the Tortoise by advancing time by less than a second; else
-	we advance one entire second each iteration.
+	# This is like Lunar Lander: first we decide what we're going to do this second,
+	# then we do it. If the current section doesn't have enough meters in it, we'll
+	# solve Achilles and the Tortoise by advancing time by less than a second; else
+	# we advance one entire second each iteration.
 	
-	First, figure out what our limits are. Then, figure out whether we should be
-	powering, cruising, braking gently, or braking hard. Then do it.
+	# First, figure out what our limits are. Then, figure out whether we should be
+	# powering, cruising, braking gently, or braking hard. Then do it.
 	
-	Note that powering and braking take time to come to full effect. The first
-	second is at 0.2m/s/s, the next second is at 0.425m/s/s, and thereafter the
-	effect is full (0.85m/s/s).
+	# Note that powering and braking take time to come to full effect. The first
+	# second is at 0.2m/s/s, the next second is at 0.425m/s/s, and thereafter the
+	# effect is full (0.85m/s/s).
 	
-	To simplify the code, the calculation is done based on iterations, not
-	seconds. This introduces a corner case (which may actually not even be
-	triggerable due to the rules specified above) whereby beginning acceleration
-	or braking just before the end of a section may mistakenly think that the
-	effect happens more quickly.
-	"""
+	# To simplify the code, the calculation is done based on iterations, not
+	# seconds. This introduces a corner case (which may actually not even be
+	# triggerable due to the rules specified above) whereby beginning acceleration
+	# or braking just before the end of a section may mistakenly think that the
+	# effect happens more quickly.
 	maxspeed = min(curspeed, prevspeed if posn<TRAINLENGTH else LINESPEED)
 	if curspeed > maxspeed: raise DerailmentError # Stub, will actually raise NameError :)
-	"""
-	Calculate the speed we would be at when we hit the next section, if we hit
-	the brakes now.
-	"""
+	# Calculate the speed we would be at when we hit the next section, if we hit
+	# the brakes now.
 	# Already got the brakes fully on
 	if mode=="Brake2": distance_to_full_braking_power, speed_full_brake = 0.0, curspeed
 	# The brakes went on one second ago, they're nearly full
@@ -101,16 +97,14 @@ while True:
 	# If we hit the brakes now (or already have hit them), we'll go another d meters and be going at s m/s before reaching full braking power.
 	distance_left = cursection - posn - distance_to_full_braking_power
 	# And we'll have distance_left meters before we hit the next section. (That might be less than zero.)
-	"""
-	Linear acceleration states that d = vt + at²/2
-	In this case:
-	distance_left = speed_full_brake*t + -0.85*t*t/2
-	Reorganizing that gives us:
-	0.425*t*t - speed_full_brake*t + distance_left = 0
-	This is a quadratic equation that might have no solution. If it has
-	no solution, speed_at_next_section is 0.0 (ie you would come to a
-	complete stop). So we calculate the discriminant first.
-	"""
+	# Linear acceleration states that d = vt + at²/2
+	# In this case:
+	# distance_left = speed_full_brake*t + -0.85*t*t/2
+	# Reorganizing that gives us:
+	# 0.425*t*t - speed_full_brake*t + distance_left = 0
+	# This is a quadratic equation that might have no solution. If it has
+	# no solution, speed_at_next_section is 0.0 (ie you would come to a
+	# complete stop). So we calculate the discriminant first.
 	# Let's use names that match the quadratic formula, at least for the moment :)
 	a, b, c = 0.425, -speed_full_brake, distance_left
 	discriminant = b*b - 4*a*c
@@ -118,36 +112,34 @@ while True:
 		# No solutions to the quadratic!
 		speed_at_next_section = 0.0
 	else:
-		"""
-		There's at least one solution. (If the discriminant's exactly zero,
-		its square root is zero, and the two roots are the same. Given that
-		we're working with IEEE floating point, rather than real numbers,
-		the possibility of this happening is pretty insignificant; and the
-		difference between a discriminant of -1e7, 0.0, and 1e7 is not at all
-		significant to us - all will result in a speed_at_next_section of
-		practically zero, which will have the same effect.) One of those
-		solutions is the time we want; the other is the time at which the
-		train would come all the way past the next section *and back again*
-		if it continued the same negative acceleration all the way past a
-		complete stop and into reverse travel, which makes absolutely no
-		physics sense, even if it makes good algebraic sense.
+		# There's at least one solution. (If the discriminant's exactly zero,
+		# its square root is zero, and the two roots are the same. Given that
+		# we're working with IEEE floating point, rather than real numbers,
+		# the possibility of this happening is pretty insignificant; and the
+		# difference between a discriminant of -1e7, 0.0, and 1e7 is not at all
+		# significant to us - all will result in a speed_at_next_section of
+		# practically zero, which will have the same effect.) One of those
+		# solutions is the time we want; the other is the time at which the
+		# train would come all the way past the next section *and back again*
+		# if it continued the same negative acceleration all the way past a
+		# complete stop and into reverse travel, which makes absolutely no
+		# physics sense, even if it makes good algebraic sense.
 		
-		So! We need to prove that only one of the solutions matters - and,
-		more importantly, *which one*. As it turns out, this is pretty easy;
-		the negative root will bring the numbers back toward zero (since we
-		work with negative b, and b is less than zero), and the positive will
-		take us further away. But what if the negative root actually came to
-		a below-zero result? That would make, again, perfect algebraic sense
-		and no physics sense (what, you could reach it in a negative amount
-		of time??), but fortunately it's provably impossible:
+		# So! We need to prove that only one of the solutions matters - and,
+		# more importantly, *which one*. As it turns out, this is pretty easy;
+		# the negative root will bring the numbers back toward zero (since we
+		# work with negative b, and b is less than zero), and the positive will
+		# take us further away. But what if the negative root actually came to
+		# a below-zero result? That would make, again, perfect algebraic sense
+		# and no physics sense (what, you could reach it in a negative amount
+		# of time??), but fortunately it's provably impossible:
 		
-		1) The discriminant squares b and then subtracts the product 4*a*c
-		2) a and b are both positive (a being a constant and c being distance)
-		3) This guarantees that the discriminant is less than b*b, therefore
-		   that its square root is less than b. QED.
+		# 1) The discriminant squares b and then subtracts the product 4*a*c
+		# 2) a and b are both positive (a being a constant and c being distance)
+		# 3) This guarantees that the discriminant is less than b*b, therefore
+		#    that its square root is less than b. QED.
 		
-		Consequently, the negative root is guaranteed to be the one we want.
-		"""
+		# Consequently, the negative root is guaranteed to be the one we want.
 		t = (-b - sqrt(discriminant)) / (2 * a)
 		speed_at_next_section = curspeed - 0.85*t
 
