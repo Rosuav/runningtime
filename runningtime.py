@@ -30,20 +30,23 @@ Corollaries:
   the one next track section.
 
 """
+
+import sys
+
 # Constants
 linespeed = 400/3.6 # Maximum speed on straight track (used as "infinity"). Weird stuff may happen if curve speed exceeds this, don't do it.
 trainlength=264
 leeway = 1.0 # Aim to be this many m/s below the speed limit when we hit a curve
 
 # Input
+# TODO: Check sys.argv for a script file, or maybe multiple of them, and parse those first/instead
 tracksections=[]
 while True:
-	n=int(input("Enter track length in m: ") or 0)
+	n=input("Enter track length in m: ")
 	if not n: break
-	d=int(input("Enter speed limit [400km/h]: ") or 0)
-	if not d: d=400
-	d=d/3.6
-	tracksections.append((n,d))
+	d=input("Enter speed limit [400km/h]: ") or 400
+	tracksections.append((int(n),int(d)/3.6))
+if not tracksections: sys.exit(0)
 tracksections.append((0,0))
 
 # Simulator initialization
