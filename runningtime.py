@@ -1,11 +1,26 @@
 """
+Running times calculator
+
+Processes a series of track sections by their length (meters) and the track speed
+limit (entered in km/h, converted to m/s for internal calculations). The ultimate
+goal is to calculate how many minutes it will take to proceed from one station to
+the next, assuming that the train begins and ends stationary (that's how you're
+supposed to be at a station, right?). It presumes upon a driver who knows the
+track intimately, and may therefore estimate too low for reality (a more cautious
+driver will apply the brakes sooner than the simulator would); in theory, this
+could be solved by placing "Brake" posts at the appropriate points, but that is
+outside the scope of this project.
+
 Rules:
 
 1) Speed limits may not be masked by other speed limits. If maximum deceleration
    from the beginning of this section will not get the train to the speed of the
-   next section, we will throw an error (derailment).
+   next section, we will throw an error (derailment). This can be resolved, in a
+   way, by lowering the track speed limit of the previous section; imperfect but
+   may get around the problem. But this should be an abnormal track construct.
 2) Track sections must be longer than the train. It is not possible to span
-   three sections.
+   three sections. This could be fixed, but would require a more complex formula
+   for calculating maxspeed.
 
 Corollaries:
 * The maximum safe speed for the train is the speed limit for the current
