@@ -102,7 +102,7 @@ while True:
 	distance_left = cursection-posn-distance_to_full_braking_power
 	# And we'll have distance_left meters before we hit the next section. (That might be less than zero.)
 	"""
-	Linear acceleration states that d = vt + at²/2
+	Linear acceleration states that d = vt + atÂ²/2
 	In this case:
 	distance_left = speed_full_brake*t + -0.85*t*t/2
 	Reorganizing that gives us:
