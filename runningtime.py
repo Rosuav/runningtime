@@ -99,7 +99,7 @@ while True:
 	# Brakes aren't on.
 	else: distance_to_full_braking_power, speed_full_brake = (curspeed - 0.1) + (curspeed - 0.4125), curspeed - 0.625
 	# If we hit the brakes now (or already have hit them), we'll go another d meters and be going at s m/s before reaching full braking power.
-	distance_left = cursection-posn-distance_to_full_braking_power
+	distance_left = cursection - posn - distance_to_full_braking_power
 	# And we'll have distance_left meters before we hit the next section. (That might be less than zero.)
 	"""
 	Linear acceleration states that d = vt + at²/2
@@ -111,6 +111,7 @@ while True:
 	no solution, speed_at_next_section is 0.0 (ie you would come to a
 	complete stop). So we calculate the discriminant first.
 	"""
+	# Let's use names that match the quadratic formula, at least for the moment :)
 	a, b, c = 0.425, -speed_full_brake, distance_left
 	discriminant = b*b - 4*a*c
 	if discriminant < 0:
