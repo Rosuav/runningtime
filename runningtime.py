@@ -35,7 +35,7 @@ import sys
 from math import sqrt
 
 # Constants
-LINESPEED = 400/3.6 # Maximum speed on straight track (used as "infinity"). Weird stuff may happen if curve speed exceeds this, don't do it.
+LINESPEED = 400/3.6 # Maximum speed on straight track (used as "infinity"). Section speeds are capped at this.
 TRAINLENGTH = 264
 LEEWAY = 1.0 # Aim to be this many m/s below the speed limit when we hit a curve
 
@@ -46,7 +46,7 @@ while True:
 	n = input("Enter track length in m: ")
 	if not n: break
 	d = input("Enter speed limit [400km/h]: ") or 400
-	tracksections.append((int(n),int(d)/3.6))
+	tracksections.append((int(n),min(int(d)/3.6, LINESPEED)))
 if not tracksections: sys.exit(0)
 
 # As the King of Hearts instructed, we begin at the beginning of the track, go
