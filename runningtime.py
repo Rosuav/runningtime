@@ -88,12 +88,18 @@ while True:
 	if curspeed > maxspeed: raise DerailmentError # Stub, will actually raise NameError :)
 	# Calculate the speed we would be at when we hit the next section, if we hit
 	# the brakes now.
-	# Already got the brakes fully on
-	if mode=="Brake2": distance_to_full_braking_power, speed_full_brake = 0.0, curspeed
-	# The brakes went on one second ago, they're nearly full
-	elif mode=="Brake1": distance_to_full_braking_power, speed_full_brake = curspeed - 0.2125, curspeed - 0.425
-	# Brakes aren't on.
-	else: distance_to_full_braking_power, speed_full_brake = (curspeed - 0.1) + (curspeed - 0.4125), curspeed - 0.625
+	if mode=="Brake2":
+		# Already got the brakes fully on.
+		distance_to_full_braking_power = 0.0
+		speed_full_brake = curspeed
+	elif mode=="Brake1":
+		# The brakes went on one second ago, they're nearly full.
+		distance_to_full_braking_power = curspeed - 0.2125
+		speed_full_brake = curspeed - 0.425
+	else:
+		# Brakes aren't on.
+		distance_to_full_braking_power = (curspeed - 0.1) + (curspeed - 0.4125)
+		speed_full_brake = curspeed - 0.625
 	# If we hit the brakes now (or already have hit them), we'll go another d meters and be going at s m/s before reaching full braking power.
 	distance_left = cursection - posn - distance_to_full_braking_power
 	# And we'll have distance_left meters before we hit the next section. (That might be less than zero.)
