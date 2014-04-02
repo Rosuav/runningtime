@@ -62,7 +62,7 @@ prevspeed = LINESPEED # Assume track speed behind us (at start of simulation) is
 cursection, curspeed = next(section)
 nextsection, nextspeed = next(section)
 posn = 0
-mode = "Idle"
+mode = "Cruise" # or "Brake" or "Power"
 speed = 0.0
 
 # And we simulate!
@@ -73,7 +73,7 @@ while True:
 	# we advance one entire second each iteration.
 	
 	# First, figure out what our limits are. Then, figure out whether we should be
-	# powering, cruising, braking gently, or braking hard. Then do it.
+	# powering, cruising, or braking. Then do it.
 	
 	# Note that powering and braking take time to come to full effect. The first
 	# second averages 0.2125m/s/s, the next second averages 0.6375m/s/s, and
