@@ -166,7 +166,11 @@ while True:
 		# If we were powering, drop into cruise for an iteration.
 		nextmode = "Cruise" if mode=="Power" else "Brake"
 	elif speed < maxspeed:
-		nextmode = "Cruise" if mode=="Brake" else "Power"
+		# Apply power only if we can do so for ten estimated seconds
+		# Note that this doesn't guarantee that we *will* power for ten seconds,
+		# only that current estimates show that we probably can.
+		if mode=="Cruise" and speed >= maxspeed - 8.5: nextmode = "Cruise"
+		else: nextmode = "Cruise" if mode=="Brake" else "Power"
 	else:
 		nextmode = "Cruise"
 	if mode != nextmode:
