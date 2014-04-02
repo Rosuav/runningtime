@@ -76,8 +76,8 @@ while True:
 	# powering, cruising, braking gently, or braking hard. Then do it.
 	
 	# Note that powering and braking take time to come to full effect. The first
-	# second is at 0.2m/s/s, the next second is at 0.425m/s/s, and thereafter the
-	# effect is full (0.85m/s/s).
+	# second averages 0.2125m/s/s, the next second averages 0.6375m/s/s, and
+	# thereafter the effect is full (0.85m/s/s). (Linear increase in effect.)
 	
 	# To simplify the code, the calculation is done based on iterations, not
 	# seconds. This introduces a corner case (which may actually not even be
@@ -94,12 +94,12 @@ while True:
 		speed_full_brake = curspeed
 	elif mode=="Brake1":
 		# The brakes went on one second ago, they're nearly full.
-		distance_to_full_braking_power = curspeed - 0.2125
-		speed_full_brake = curspeed - 0.425
+		distance_to_full_braking_power = curspeed - 0.6375/2
+		speed_full_brake = curspeed - 0.6375
 	else:
 		# Brakes aren't on.
-		distance_to_full_braking_power = (curspeed - 0.1) + (curspeed - 0.4125)
-		speed_full_brake = curspeed - 0.625
+		distance_to_full_braking_power = 2 * (curspeed - 0.85/2)
+		speed_full_brake = curspeed - 0.85
 	# If we hit the brakes now (or already have hit them), we'll go another d meters and be going at s m/s before reaching full braking power.
 	distance_left = cursection - posn - distance_to_full_braking_power
 	# And we'll have distance_left meters before we hit the next section. (That might be less than zero.)
