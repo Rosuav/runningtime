@@ -90,9 +90,9 @@ while True:
 	# Calculate the speed we would be at when we hit the next section, if we hit
 	# the brakes now.
 	if mode=="Brake":
-		# Already got the brakes on.
-		distance_to_full_braking_power = 0.0
-		speed_full_brake = speed
+		# Already got the brakes on. Figure out what would happen if we cruised.
+		distance_to_full_braking_power = 2 * (speed - 0.85/2)
+		speed_full_brake = speed - 0.85
 	elif mode=="Power":
 		# We need to slow to cruise before braking.
 		# This involves two seconds of backing off the acceleration (during which
