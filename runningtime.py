@@ -37,6 +37,7 @@ from math import sqrt
 # Constants
 LINESPEED = 400/3.6 # Maximum speed on straight track (used as "infinity"). Section speeds are capped at this.
 TRAINLENGTH = 264
+LEEWAY = 1.0 # Aim to be this many m/s below the speed limit when we hit a curve
 
 # Input
 # TODO: Check sys.argv for a script file, or maybe multiple of them, and parse those first/instead
@@ -160,7 +161,7 @@ while True:
 		speed_at_next_section = speed_full_brake - 0.85*time_to_next_section
 		print("Speed next sec: %.2f"%speed_at_next_section)
 
-	if speed_at_next_section >= nextspeed:
+	if speed_at_next_section >= nextspeed - LEEWAY:
 		# Note that if it's actually greater, we'll probably derail when we hit it
 		# If we were powering, drop into cruise for an iteration.
 		nextmode = "Cruise" if mode=="Power" else "Brake"
