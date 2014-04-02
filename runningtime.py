@@ -157,7 +157,7 @@ while True:
 		
 		# Consequently, the negative root is guaranteed to be the one we want.
 		time_to_next_section = (-b - sqrt(discriminant)) / (2 * a)
-		speed_at_next_section = speed - 0.85*time_to_next_section
+		speed_at_next_section = speed_full_brake - 0.85*time_to_next_section
 		print("Speed next sec: %.2f"%speed_at_next_section)
 
 	if speed_at_next_section >= nextspeed:
