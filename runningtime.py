@@ -65,6 +65,7 @@ posn = 0
 mode = "Cruise" # or "Brake" or "Power"
 speed = 0.0
 accel = {"Brake":-0.85, "Cruise":0.0, "Power":0.85}
+print() # A blank line will make the display look tidier with redirection
 
 # And we simulate!
 while True:
