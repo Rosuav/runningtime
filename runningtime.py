@@ -165,7 +165,7 @@ while True:
 		# If we were powering, drop into cruise for an iteration.
 		nextmode = "Cruise" if mode=="Power" else "Brake"
 	elif speed < maxspeed:
-		nextmode = "Power"
+		nextmode = "Cruise" if mode=="Brake" else "Power"
 	else:
 		nextmode = "Cruise"
 	if mode != nextmode:
