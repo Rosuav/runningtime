@@ -75,15 +75,12 @@ while True:
 	# First, figure out what our limits are. Then, figure out whether we should be
 	# powering, cruising, or braking. Then do it.
 	
-	# Note that powering and braking take time to come to full effect. The first
-	# second averages 0.2125m/s/s, the next second averages 0.6375m/s/s, and
-	# thereafter the effect is full (0.85m/s/s). (Linear increase in effect.)
-	
-	# To simplify the code, the calculation is done based on iterations, not
-	# seconds. This introduces a corner case (which may actually not even be
-	# triggerable due to the rules specified above) whereby beginning acceleration
-	# or braking just before the end of a section may mistakenly think that the
-	# effect happens more quickly.
+	# Note that powering and braking take time to come to full effect. The transition
+	# from cruise to either of the above will advance time by two seconds (rather
+	# than the usual one second per iteration), or by whatever it takes to reach the
+	# end of the track section, whichever is shorter; after that iteration, it is
+	# assumed that the gentle acceleration is complete. (The difference won't be much
+	# even in the worst case. Maybe like 0.05m/s of speed difference.)
 
 	# TODO: Require a minimum 10s cruise time between powering and braking
 	maxspeed = min(curspeed, prevspeed if posn<TRAINLENGTH else LINESPEED)
