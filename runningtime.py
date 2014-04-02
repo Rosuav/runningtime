@@ -85,27 +85,27 @@ while True:
 	# even in the worst case. Maybe like 0.05m/s of speed difference.)
 
 	maxspeed = min(curspeed, prevspeed if posn<TRAINLENGTH else LINESPEED)
-	if curspeed > maxspeed: raise DerailmentError # Stub, will actually raise NameError :)
+	if speed > maxspeed: raise DerailmentError # Stub, will actually raise NameError :)
 	# Calculate the speed we would be at when we hit the next section, if we hit
 	# the brakes now.
 	if mode=="Brake":
 		# Already got the brakes on.
 		distance_to_full_braking_power = 0.0
-		speed_full_brake = curspeed
+		speed_full_brake = speed
 	elif mode=="Power":
 		# We need to slow to cruise before braking.
 		# This involves two seconds of backing off the acceleration (during which
-		# we'll gain 0.85 m/s, so we'll average curspeed+.85/2 for those two secs),
+		# we'll gain 0.85 m/s, so we'll average speed+.85/2 for those two secs),
 		# followed by two more seconds of beginning the deceleration, which are
-		# exactly like the third case, only curspeed will be 0.85 higher. Add it
+		# exactly like the third case, only speed will be 0.85 higher. Add it
 		# all up and you get a target speed equal to current speed, and an average
 		# speed of 0.85/2 higher than that speed.
-		distance_to_full_braking_power = 4 * (curspeed + 0.85/2)
-		speed_full_brake = curspeed
+		distance_to_full_braking_power = 4 * (speed + 0.85/2)
+		speed_full_brake = speed
 	else:
 		# Brakes aren't on.
-		distance_to_full_braking_power = 2 * (curspeed - 0.85/2)
-		speed_full_brake = curspeed - 0.85
+		distance_to_full_braking_power = 2 * (speed - 0.85/2)
+		speed_full_brake = speed - 0.85
 	# If we hit the brakes now (or already have hit them), we'll go another d meters and be going at s m/s before reaching full braking power.
 	distance_left = cursection - posn - distance_to_full_braking_power
 	# And we'll have distance_left meters before we hit the next section. (That might be less than zero.)
@@ -152,14 +152,15 @@ while True:
 		#    that its square root is less than b. QED.
 		
 		# Consequently, the negative root is guaranteed to be the one we want.
-		t = (-b - sqrt(discriminant)) / (2 * a)
-		speed_at_next_section = curspeed - 0.85*t
+		time_to_next_section = (-b - sqrt(discriminant)) / (2 * a)
+		speed_at_next_section = speed - 0.85*time_to_next_section
+		print("Speed next sec: %.2f"%speed_at_next_section)
 
 	if speed_at_next_section >= nextspeed-LEEWAY:
 		# Note that if it's actually greater, we'll probably derail when we hit it
 		# If we were powering, drop into cruise for an iteration.
 		nextmode = "Cruise" if mode=="Power" else "Brake"
-	elif curspeed < maxspeed:
+	elif speed < maxspeed:
 		nextmode = "Power"
 	else:
 		nextmode = "Cruise"
@@ -171,11 +172,12 @@ while True:
 	# When we change modes, the effective acceleration is the average of the previous
 	# and the new. Obviously when the modes are the same, we end up back where we started.
 	actual_accel = (accel[mode] + accel[nextmode]) / 2
-	distance = advance * (curspeed + actual_accel/2)
-	if curspeed + actual_accel < 0:
+	distance = advance * (speed + actual_accel/2)
+	print("[%6.2f] %s -> %s, spd %.2f, pos %f"%(t, mode, nextmode, speed, posn))
+	if speed + actual_accel < 0:
 		# We come to a complete halt. This should only happen at the end of the line,
 		# and we simply end the simulation.
-		halt_time = curspeed / -actual_accel * advance
+		halt_time = speed / -actual_accel * advance
 		posn += distance * halt_time / advance
 		t += halt_time
 		print("[%6.2f] Halt at end of line."%t)
@@ -190,7 +192,7 @@ while True:
 		nextsection, nextspeed = next(section)
 	t += advance
 	posn += distance
-	curspeed += actual_accel
+	speed += actual_accel * advance
 	mode = nextmode
 
 print("Final time:", t, "seconds - %d:%02d" % divmod(int(t), 60))
