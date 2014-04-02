@@ -163,7 +163,9 @@ while True:
 	# And we'll have distance_left meters before we hit the next section. (That might be less than zero.)
 	print("Speed next sec: %.2f / %.2f"%(residual_speed(speed_full_brake, distance_left), nextspeed))
 
-	if residual_speed(speed_full_brake, distance_left) >= nextspeed - LEEWAY:
+	if mode=="Brake":
+		nextmode = "Cruise" if speed<nextspeed+0.85 else "Brake"
+	elif residual_speed(speed_full_brake, distance_left) >= nextspeed - LEEWAY and speed > nextspeed - LEEWAY:
 		# Note that if it's actually greater, we'll probably derail when we hit it
 		# If we were powering, drop into cruise for an iteration.
 		nextmode = "Cruise" if mode=="Power" else "Brake"
