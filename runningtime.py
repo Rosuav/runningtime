@@ -85,7 +85,9 @@ while True:
 	# even in the worst case. Maybe like 0.05m/s of speed difference.)
 
 	maxspeed = min(curspeed, prevspeed if posn<TRAINLENGTH else LINESPEED)
-	if speed > maxspeed: raise DerailmentError # Stub, will actually raise NameError :)
+	if speed > maxspeed:
+		print("[%6.2f] Derailed! %d km/h through %d km/h curve"%(t, int(speed*3.6+.5), int(maxspeed*3.6+.5)))
+		break
 	# Calculate the speed we would be at when we hit the next section, if we hit
 	# the brakes now.
 	if mode=="Brake":
