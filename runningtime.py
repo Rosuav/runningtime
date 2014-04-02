@@ -37,7 +37,6 @@ from math import sqrt
 # Constants
 LINESPEED = 400/3.6 # Maximum speed on straight track (used as "infinity"). Section speeds are capped at this.
 TRAINLENGTH = 264
-LEEWAY = 1.0 # Aim to be this many m/s below the speed limit when we hit a curve
 
 # Input
 # TODO: Check sys.argv for a script file, or maybe multiple of them, and parse those first/instead
@@ -102,11 +101,14 @@ while True:
 		# exactly like the third case, only speed will be 0.85 higher. Add it
 		# all up and you get a target speed equal to current speed, and an average
 		# speed of 0.85/2 higher than that speed.
-		distance_to_full_braking_power = 4 * (speed + 0.85/2)
-		speed_full_brake = speed
+		# This decision is made such that one more second of powering would cause
+		# us to miss the curve speed, so it assumes that additional second first.
+		distance_to_full_braking_power = (speed + 0.85/2) + 4 * (speed + 0.85 + 0.85/2)
+		speed_full_brake = speed + 0.85
 	else:
 		# Brakes aren't on.
-		distance_to_full_braking_power = 2 * (speed - 0.85/2)
+		# As above, assume one more second at current speed.
+		distance_to_full_braking_power = speed + 2 * (speed - 0.85/2)
 		speed_full_brake = speed - 0.85
 	# If we hit the brakes now (or already have hit them), we'll go another d meters and be going at s m/s before reaching full braking power.
 	distance_left = cursection - posn - distance_to_full_braking_power
@@ -158,7 +160,7 @@ while True:
 		speed_at_next_section = speed - 0.85*time_to_next_section
 		print("Speed next sec: %.2f"%speed_at_next_section)
 
-	if speed_at_next_section >= nextspeed-LEEWAY:
+	if speed_at_next_section >= nextspeed:
 		# Note that if it's actually greater, we'll probably derail when we hit it
 		# If we were powering, drop into cruise for an iteration.
 		nextmode = "Cruise" if mode=="Power" else "Brake"
