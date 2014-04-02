@@ -84,6 +84,8 @@ while True:
 	# triggerable due to the rules specified above) whereby beginning acceleration
 	# or braking just before the end of a section may mistakenly think that the
 	# effect happens more quickly.
+
+	# TODO: Require a minimum 10s cruise time between powering and braking
 	maxspeed = min(curspeed, prevspeed if posn<TRAINLENGTH else LINESPEED)
 	if curspeed > maxspeed: raise DerailmentError # Stub, will actually raise NameError :)
 	# Calculate the speed we would be at when we hit the next section, if we hit
