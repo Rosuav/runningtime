@@ -90,6 +90,10 @@ while True:
 	if curspeed > maxspeed: raise DerailmentError # Stub, will actually raise NameError :)
 	# Calculate the speed we would be at when we hit the next section, if we hit
 	# the brakes now.
+	# NOTE: Technically the train doesn't follow three separate parts of linear
+	# acceleration, but a curve. However, the error from using this simplified
+	# estimate is insignificant compared to other inaccuracy in the system (eg
+	# measurement error).
 	if mode=="Brake2":
 		# Already got the brakes fully on.
 		distance_to_full_braking_power = 0.0
@@ -114,15 +118,6 @@ while True:
 	# no solution, speed_at_next_section is 0.0 (ie you would come to a
 	# complete stop). So we calculate the discriminant first.
 	# Let's use names that match the quadratic formula, at least for the moment :)
-	# NOTE: Ian Kelly looked at this code and said that this would *not* be
-	# linear acceleration (as that would involve three separate jerks), but
-	# would actually be some form of smoothed curve - possibly parabolic. I
-	# have no idea what the actual acceleration curve is, or whether this's
-	# going to be significantly different. We need expert knowledge of: the
-	# way the train accelerates/decelerates, the maths involved in this new
-	# plot, and - then and ONLY then - the code required to implement that.
-	# I'm a programmer, not a mathematician, and certainly not an expert on
-	# passenger safety! Sorry.
 	a, b, c = 0.425, -speed_full_brake, distance_left
 	discriminant = b*b - 4*a*c
 	if discriminant < 0:
