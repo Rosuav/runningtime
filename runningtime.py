@@ -161,7 +161,7 @@ while True:
 	# If we hit the brakes now (or already have hit them), we'll go another d meters and be going at s m/s before reaching full braking power.
 	distance_left = cursection - posn - distance_to_full_braking_power
 	# And we'll have distance_left meters before we hit the next section. (That might be less than zero.)
-	print("Speed next sec: %.2f / %.2f"%(residual_speed(speed_full_brake, distance_left), nextspeed))
+	# print("Speed next sec: %.2f / %.2f"%(residual_speed(speed_full_brake, distance_left), nextspeed))
 
 	if mode=="Brake":
 		nextmode = "Cruise" if speed<nextspeed+0.85 else "Brake"
@@ -186,7 +186,7 @@ while True:
 	# and the new. Obviously when the modes are the same, we end up back where we started.
 	actual_accel = (accel[mode] + accel[nextmode]) / 2
 	distance = advance * (speed + actual_accel/2)
-	print("[%6.2f] %s -> %s, spd %.2f, pos %f"%(t, mode, nextmode, speed, posn))
+	# print("[%6.2f] %s -> %s, spd %.2f, pos %f"%(t, mode, nextmode, speed, posn))
 	if speed + actual_accel < 0:
 		# We come to a complete halt. This should only happen at the end of the line,
 		# and we simply end the simulation.
