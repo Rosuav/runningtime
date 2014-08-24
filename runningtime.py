@@ -207,11 +207,11 @@ while True:
 		# We'll reach the end of the section.
 		# Grab the next section, and figure out at what exact time point we hit it.
 		cross_time = t + (cursection - posn) / distance * advance
-		print("[%6.2f] Enter next section (%dm speed %d)"%(cross_time, nextsection, int(nextspeed*3.6+.5)))
 		posn -= cursection
 		prevspeed = curspeed
 		cursection, curspeed = nextsection, nextspeed
 		nextsection, nextspeed = next(section)
+		print("[%6.2f] Enter next section (%dm speed %d, then %d)"%(cross_time, cursection, int(curspeed*3.6+.5), int(nextspeed*3.6+.5)))
 	t += advance
 	posn += distance
 	speed += actual_accel * advance
