@@ -182,9 +182,17 @@ while True:
 		print("[%6.2f] %s"%(t, nextmode))
 	else:
 		advance = 1.0
+	# Applying full power when the current speed is over 200kph can't actually manage
+	# the ideal 0.85m/s/s acceleration. The actual acceleration possible is given by a
+	# graph of a circle tangent to 0.85 at 200kph and to 0.0 at 400kph.
+	if speed > 200/3.6:
+		maxpower = sqrt((1280/3.6+speed)*(400/3.6-speed))/(speed+440/3.6)
+	else:
+		maxpower = 0.85
 	# When we change modes, the effective acceleration is the average of the previous
 	# and the new. Obviously when the modes are the same, we end up back where we started.
-	actual_accel = (accel[mode] + accel[nextmode]) / 2
+	actual_accel = (min(accel[mode],maxpower) + min(accel[nextmode],maxpower)) / 2
+	print("[%6.2f] Speed %.2f kph, goal %s, mp %.2f, actual accel %.2f"%(t,speed*3.6,nextmode,maxpower,actual_accel))
 	distance = advance * (speed + actual_accel/2)
 	# print("[%6.2f] %s -> %s, spd %.2f, pos %f"%(t, mode, nextmode, speed, posn))
 	if speed + actual_accel < 0:
