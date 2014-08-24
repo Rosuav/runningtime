@@ -209,6 +209,7 @@ while True:
 		cross_time = t + (cursection - posn) / distance * advance
 		print("[%6.2f] Enter next section (%dm speed %d)"%(cross_time, nextsection, int(nextspeed*3.6+.5)))
 		posn -= cursection
+		prevspeed = curspeed
 		cursection, curspeed = nextsection, nextspeed
 		nextsection, nextspeed = next(section)
 	t += advance
