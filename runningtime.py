@@ -163,6 +163,8 @@ while True:
 		# us to miss the curve speed, so it assumes that additional second first.
 		distance_to_full_braking_power = (speed + 0.85/2) + 4 * (speed + 0.85 + 0.85/2)
 		speed_full_brake = speed + 0.85
+		# If we're powering, we need to cut power in time to not over-speed the curve.
+		maxspeed -= 0.85 * 2
 	else:
 		# Brakes aren't on.
 		# As above, assume one more second at current speed.
