@@ -205,7 +205,7 @@ while True:
 	# and the new. Obviously when the modes are the same, we end up back where we started.
 	actual_accel = (min(accel[mode],maxpower) + min(accel[nextmode],maxpower)) / 2
 	# Show some debugging info
-	debug=[]
+	debug=["Posn %.2f"%posn]
 	if posn<TRAINLENGTH and prevspeed<curspeed:
 		maxspd='%d [%dm]'%(int(prevspeed*3.6+.5),TRAINLENGTH-posn)
 	else:
