@@ -204,7 +204,13 @@ while True:
 	# When we change modes, the effective acceleration is the average of the previous
 	# and the new. Obviously when the modes are the same, we end up back where we started.
 	actual_accel = (min(accel[mode],maxpower) + min(accel[nextmode],maxpower)) / 2
-	print("[%6.2f] Speed %.2f kph, goal %s, mp %.2f, actual accel %.2f"%(t,speed*3.6,nextmode,maxpower,actual_accel))
+	# Show some debugging info
+	if posn<TRAINLENGTH and prevspeed<curspeed:
+		maxspd='%d [%dm]'%(int(prevspeed*3.6+.5),TRAINLENGTH-posn)
+	else:
+		maxspd='%d'%int(curspeed*3.6+.5)
+	print("(%6.2f) Speed %.2f/%s kph, goal %s, mp %.2f, actual accel %.2f"%(t,speed*3.6,maxspd,nextmode,maxpower,actual_accel))
+	# Note that the above info may at times go wider than 80 characters. Expand your window or disable the above.
 	distance = advance * (speed + actual_accel/2)
 	# print("[%6.2f] %s -> %s, spd %.2f, pos %f"%(t, mode, nextmode, speed, posn))
 	if speed + actual_accel < 0:
