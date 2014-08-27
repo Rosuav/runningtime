@@ -214,8 +214,8 @@ while True:
 	# Speed at Next Section. Critical to calculation of when to brake.
 	if residual>0.0: debug.append("sns %.2f/%d"%(residual*3.6, int(nextspeed*3.6+.5)))
 	debug.append("goal "+nextmode)
-	debug.append("mp %.2f"%maxpower)
-	debug.append("actual accel %.2f"%actual_accel)
+	if maxpower<0.85: debug.append("mp %.2f"%maxpower)
+	debug.append("accel %.2f"%actual_accel)
 	print("(%6.2f) %s"%(t,', '.join(debug)))
 	# Note that the above info may at times go wider than 80 characters. Expand your window or disable the above.
 	distance = advance * (speed + actual_accel/2)
