@@ -205,14 +205,18 @@ while True:
 	# and the new. Obviously when the modes are the same, we end up back where we started.
 	actual_accel = (min(accel[mode],maxpower) + min(accel[nextmode],maxpower)) / 2
 	# Show some debugging info
+	debug=[]
 	if posn<TRAINLENGTH and prevspeed<curspeed:
 		maxspd='%d [%dm]'%(int(prevspeed*3.6+.5),TRAINLENGTH-posn)
 	else:
 		maxspd='%d'%int(curspeed*3.6+.5)
+	debug.append("Speed %.2f/%s kph"%(speed*3.6,maxspd))
 	# Speed at Next Section. Critical to calculation of when to brake.
-	if residual>0.0: sns=", sns %.2f/%d"%(residual*3.6, int(nextspeed*3.6+.5))
-	else: sns=''
-	print("(%6.2f) Speed %.2f/%s kph%s, goal %s, mp %.2f, actual accel %.2f"%(t,speed*3.6,maxspd,sns,nextmode,maxpower,actual_accel))
+	if residual>0.0: debug.append("sns %.2f/%d"%(residual*3.6, int(nextspeed*3.6+.5)))
+	debug.append("goal "+nextmode)
+	debug.append("mp %.2f"%maxpower)
+	debug.append("actual accel %.2f"%actual_accel)
+	print("(%6.2f) %s"%(t,', '.join(debug)))
 	# Note that the above info may at times go wider than 80 characters. Expand your window or disable the above.
 	distance = advance * (speed + actual_accel/2)
 	# print("[%6.2f] %s -> %s, spd %.2f, pos %f"%(t, mode, nextmode, speed, posn))
