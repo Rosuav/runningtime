@@ -212,7 +212,7 @@ while True:
 		maxspd='%d'%int(curspeed*3.6+.5)
 	debug.append("spd %.2f/%s kph"%(speed*3.6,maxspd))
 	# Speed at Next Section. Critical to calculation of when to brake.
-	if residual>0.0: debug.append("sns %.2f/%d"%(residual*3.6, int(nextspeed*3.6+.5)))
+	if residual>0.0: debug.append("sns [%.2f,%.2f] %.2f/%d"%(speed_full_brake*3.6, distance_left, residual*3.6, int(nextspeed*3.6+.5)))
 	debug.append("goal "+nextmode)
 	if nextmode=="Power" and maxpower<0.85: debug.append("mp %.2f"%maxpower)
 	debug.append("accel %.2f"%actual_accel)
