@@ -173,11 +173,11 @@ while True:
 	# If we hit the brakes now (or already have hit them), we'll go another d meters and be going at s m/s before reaching full braking power.
 	distance_left = cursection - posn - distance_to_full_braking_power
 	# And we'll have distance_left meters before we hit the next section. (That might be less than zero.)
-	# print("Speed next sec: %.2f / %.2f"%(residual_speed(speed_full_brake, distance_left), nextspeed))
+	residual = residual_speed(speed_full_brake, distance_left)
 
 	if mode=="Brake":
 		nextmode = "Cruise" if speed<nextspeed+0.85 else "Brake"
-	elif residual_speed(speed_full_brake, distance_left) >= nextspeed - LEEWAY and speed > nextspeed - LEEWAY:
+	elif residual >= nextspeed - LEEWAY and speed > nextspeed - LEEWAY:
 		# Note that if it's actually greater, we'll probably derail when we hit it
 		# If we were powering, drop into cruise for an iteration.
 		nextmode = "Cruise" if mode=="Power" else "Brake"
@@ -209,7 +209,10 @@ while True:
 		maxspd='%d [%dm]'%(int(prevspeed*3.6+.5),TRAINLENGTH-posn)
 	else:
 		maxspd='%d'%int(curspeed*3.6+.5)
-	print("(%6.2f) Speed %.2f/%s kph, goal %s, mp %.2f, actual accel %.2f"%(t,speed*3.6,maxspd,nextmode,maxpower,actual_accel))
+	# Speed at Next Section. Critical to calculation of when to brake.
+	if residual>0.0: sns=", sns %.2f/%d"%(residual*3.6, int(nextspeed*3.6+.5))
+	else: sns=''
+	print("(%6.2f) Speed %.2f/%s kph%s, goal %s, mp %.2f, actual accel %.2f"%(t,speed*3.6,maxspd,sns,nextmode,maxpower,actual_accel))
 	# Note that the above info may at times go wider than 80 characters. Expand your window or disable the above.
 	distance = advance * (speed + actual_accel/2)
 	# print("[%6.2f] %s -> %s, spd %.2f, pos %f"%(t, mode, nextmode, speed, posn))
