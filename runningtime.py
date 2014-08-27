@@ -76,6 +76,7 @@ posn = 0
 mode = "Cruise" # or "Brake" or "Power"
 speed = 0.0
 accel = {"Brake":-0.85, "Cruise":0.0, "Power":0.85}
+brake_till_next_sec = False
 
 def residual_speed(speed, distance):
 	# Linear acceleration states that d = vt + at²/2
@@ -175,12 +176,15 @@ while True:
 	# And we'll have distance_left meters before we hit the next section. (That might be less than zero.)
 	residual = residual_speed(speed_full_brake, distance_left)
 
-	if mode=="Brake":
+	if brake_till_next_sec:
+		nextmode = "Brake"
+	elif mode=="Brake":
 		nextmode = "Cruise" if speed<nextspeed+0.85 else "Brake"
-	elif residual >= nextspeed - LEEWAY and speed > nextspeed - LEEWAY:
+	elif residual!=0.0 and residual >= nextspeed - LEEWAY and speed > nextspeed - LEEWAY:
 		# Note that if it's actually greater, we'll probably derail when we hit it
 		# If we were powering, drop into cruise for an iteration.
 		nextmode = "Cruise" if mode=="Power" else "Brake"
+		brake_till_next_sec = True
 	elif speed < maxspeed:
 		# Apply power only if we can do so for ten estimated seconds
 		# Note that this doesn't guarantee that we *will* power for ten seconds,
@@ -216,6 +220,7 @@ while True:
 	debug.append("goal "+nextmode)
 	if nextmode=="Power" and maxpower<0.85: debug.append("mp %.2f"%maxpower)
 	debug.append("accel %.2f"%actual_accel)
+	if brake_till_next_sec: debug.append("brake tns")
 	print("(%6.2f) %s"%(t,', '.join(debug)))
 	# Note that the above info may at times go wider than 80 characters. Expand your window or disable the above.
 	distance = advance * (speed + actual_accel/2)
@@ -236,6 +241,7 @@ while True:
 		prevspeed = curspeed
 		cursection, curspeed = nextsection, nextspeed
 		nextsection, nextspeed = next(section)
+		brake_till_next_sec = False
 		print("[%6.2f] Enter next section (%dm speed %d, then %d)"%(cross_time, cursection, int(curspeed*3.6+.5), int(nextspeed*3.6+.5)))
 	t += advance
 	posn += distance
