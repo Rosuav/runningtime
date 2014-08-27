@@ -205,12 +205,12 @@ while True:
 	# and the new. Obviously when the modes are the same, we end up back where we started.
 	actual_accel = (min(accel[mode],maxpower) + min(accel[nextmode],maxpower)) / 2
 	# Show some debugging info
-	debug=["Posn %.2f"%posn]
+	debug=["posn %.2f"%posn]
 	if posn<TRAINLENGTH and prevspeed<curspeed:
 		maxspd='%d [%dm]'%(int(prevspeed*3.6+.5),TRAINLENGTH-posn)
 	else:
 		maxspd='%d'%int(curspeed*3.6+.5)
-	debug.append("Speed %.2f/%s kph"%(speed*3.6,maxspd))
+	debug.append("spd %.2f/%s kph"%(speed*3.6,maxspd))
 	# Speed at Next Section. Critical to calculation of when to brake.
 	if residual>0.0: debug.append("sns %.2f/%d"%(residual*3.6, int(nextspeed*3.6+.5)))
 	debug.append("goal "+nextmode)
