@@ -226,7 +226,7 @@ while True:
 		halt_time = speed / -actual_accel * advance
 		posn += distance * halt_time / advance
 		t += halt_time
-		print("[%6.2f] Halt at end of line."%t)
+		print("[%6.2f] Halt %dm from end of line."%(t,cursection-posn))
 		break
 	if posn + distance > cursection:
 		# We'll reach the end of the section.
