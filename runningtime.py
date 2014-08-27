@@ -40,13 +40,24 @@ TRAINLENGTH = 264
 LEEWAY = 1.0 # Aim to be this many m/s below the speed limit when we hit a curve
 
 # Input
-# TODO: Check sys.argv for a script file, or maybe multiple of them, and parse those first/instead
 tracksections = []
-while True:
-	n = input("Enter track length in m: ")
-	if not n: break
-	d = input("Enter speed limit [400km/h]: ") or 400
-	tracksections.append((int(n),min(int(d)/3.6, LINESPEED)))
+if len(sys.argv)==1: sys.argv.append("-")
+for fn in sys.argv[1:]:
+	if fn=="-":
+		# Read from console if no files given (or if "-" given)
+		while True:
+			n = input("Enter track length in m: ")
+			if not n: break
+			d = input("Enter speed limit [400km/h]: ") or 400
+			tracksections.append((int(n),min(int(d)/3.6, LINESPEED)))
+		continue
+	with open(fn) as f:
+		for line in f:
+			if not line or line.startswith("#"): continue
+			if ' ' not in line: line+=' 400'
+			n, d = line.split()
+			print("%sm of %skph track"%(n,d))
+			tracksections.append((int(n),min(int(d)/3.6, LINESPEED)))
 if not tracksections: sys.exit(0)
 
 # As the King of Hearts instructed, we begin at the beginning of the track, go
@@ -65,7 +76,6 @@ posn = 0
 mode = "Cruise" # or "Brake" or "Power"
 speed = 0.0
 accel = {"Brake":-0.85, "Cruise":0.0, "Power":0.85}
-print() # A blank line will make the display look tidier with redirection
 
 def residual_speed(speed, distance):
 	# Linear acceleration states that d = vt + at²/2

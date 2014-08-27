@@ -1,15 +1,9 @@
+# Straight track (no speed limit) is implicitly 400kph
 1000
-
-500
-200
+500 200
 3000
-
-500
-100
+500 100
 3000
-
-500
-50
+# A short, tight curve!
+500 50
 1000
-
-
